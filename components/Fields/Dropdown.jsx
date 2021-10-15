@@ -1,47 +1,28 @@
-import { useSelect } from '../../hooks';
-import { classnames } from '../../lib';
+import { useSelect } from 'downshift';
+import { OptionList } from '.';
+import { classnames, downshift } from '../../lib';
 
-const Dropdown = ({ placeholder, onSelect, children }) => {
+// FIXME: handle onChange, onBlur
+const Dropdown = ({ children, placeholder }) => {
+  const { labels } = downshift.normalize(children);
+
   const {
-    selectedItem,
     isOpen,
+    selectedItem,
     getToggleButtonProps,
-    getMenuProps,
-    highlightedIndex,
-    getItemProps,
-  } = useSelect({ children, onSelect });
-
-  const showItems = ({ props: { value, children } }, index) => {
-    const isHover = highlightedIndex === index;
-
-    return (
-      <li
-        key={`${value}${index}`}
-        className={classnames('py-1 px-3', isHover && 'bg-gray-400')}
-        {...getItemProps({ value, index })}
-      >
-        {children}
-      </li>
-    );
-  };
+    getLabelProps,
+    ...downshiftProps
+  } = useSelect({ items: labels });
 
   return (
-    <div className="relative">
-      <div
-        className={classnames('form-dropdown', isOpen && 'rounded-b-none')}
-        {...getToggleButtonProps()}
-      >
-        <span>{(selectedItem && selectedItem.verbose) || placeholder}</span>
+    <div className={classnames('relative', isOpen && 'is-open')}>
+      <div className="form-input form-dropdown" {...getToggleButtonProps()}>
+        <span className="flex-grow">{selectedItem || placeholder}</span>
         <span>
           <i className="fas fa-chevron-down" />
         </span>
       </div>
-      <ul
-        className={classnames('outline-none my-0', isOpen && 'form-dropdown-list')}
-        {...getMenuProps()}
-      >
-        {isOpen && children.map(showItems)}
-      </ul>
+      <OptionList items={labels} isOpen={isOpen} downshiftProps={downshiftProps} />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import Field from './Field';
 import Fieldset from './Fieldset';
 import Input from './Input';
 import Number from './Number';
+import OptionList from './OptionList';
 import Password from './Password';
 import Radio from './Radio';
 import RadioContext from './RadioContext';
@@ -26,6 +27,7 @@ export {
   Fieldset,
   Input,
   Number,
+  OptionList,
   Password,
   Radio,
   RadioContext,

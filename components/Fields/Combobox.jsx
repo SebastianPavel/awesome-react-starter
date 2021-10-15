@@ -1,64 +1,41 @@
 import { useState } from 'react';
 import { useCombobox } from 'downshift';
-import { classnames } from '../../lib';
+import { OptionList } from '.';
+import { classnames, downshift } from '../../lib';
 
-const Combobox = ({ children }) => {
-  const newones = children.map(({ props: { value, defaultSelected, children } }) => ({
-    value,
-    defaultSelected,
-    label: children,
-  }));
-  const items = newones.map(({ label }) => label);
+// FIXME: handle onChange, onBlur
+const Combobox = ({ children, placeholder }) => {
+  const { labels } = downshift.normalize(children);
+  const [inputItems, setInputItems] = useState(labels);
 
-  const [inputItems, setInputItems] = useState(items);
   const {
     isOpen,
     getToggleButtonProps,
-    getMenuProps,
     getInputProps,
     getComboboxProps,
-    highlightedIndex,
-    getItemProps,
+    ...downshiftProps
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({ inputValue }) => {
       setInputItems(
-        items.filter((item) => item.toLowerCase().startsWith(inputValue.toLowerCase()))
+        labels.filter((item) => item.toLowerCase().startsWith(inputValue.toLowerCase()))
       );
     },
   });
 
-  const showItems = (item, index) => {
-    return (
-      <li
-        className={classnames('py-1 px-3', highlightedIndex === index && 'bg-gray-400')}
-        {...getItemProps({ item, index, key: `${item}${index}` })}
-      >
-        {item}
-      </li>
-    );
-  };
-
   return (
-    <div className="relative">
-      <div
-        className={classnames('form-dropdown', isOpen && inputItems.length && 'rounded-b-none')}
-        {...getComboboxProps()}
-      >
-        <input className="-my-2 outline-none w-full bg-transparent" {...getInputProps()} />
+    <div className={classnames('relative', isOpen && 'is-open')}>
+      <div className="form-input form-combobox" {...getComboboxProps()}>
+        <input
+          className="-my-2 outline-none w-full bg-transparent"
+          placeholder={placeholder}
+          {...getInputProps()}
+        />
         <span role="button" {...getToggleButtonProps()}>
           <i className="fas fa-chevron-down" />
         </span>
       </div>
-      <ul
-        className={classnames(
-          'outline-none my-0 max-h-40 overflow-y-auto',
-          isOpen && inputItems.length && 'form-dropdown-list'
-        )}
-        {...getMenuProps()}
-      >
-        {isOpen && inputItems.map(showItems)}
-      </ul>
+      <OptionList items={inputItems} isOpen={isOpen} downshiftProps={downshiftProps} />
     </div>
   );
 };

@@ -30,12 +30,15 @@ button:disabled {
   filter: opacity(0.75);
 }
 
-.form-dropdown {
-  @apply border border-gray-500 rounded flex justify-between py-2 px-3 w-full bg-white;
+.form-dropdown,
+.form-combobox {
+  @apply flex justify-between w-full;
 }
-
+.form-combobox ~ ul {
+  @apply max-h-40 overflow-y-auto;
+}
 .form-dropdown-list {
-  @apply z-10 bg-gray-100 w-full outline-none absolute top-full border-b border-r border-l border-gray-500 rounded-b;
+  @apply z-10 bg-white w-full outline-none absolute top-full border-b border-r border-l border-gray-500;
 }
 
 .form-checkbox:disabled,

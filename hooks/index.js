@@ -6,7 +6,6 @@ import useMutation from './use-mutation';
 import useOnClickOutside from './use-onclick-outside';
 import useQuery from './use-query';
 import useRerender from './use-rerender';
-import useSelect from './use-select';
 
 export {
   useCollapsible,
@@ -17,5 +16,4 @@ export {
   useOnClickOutside,
   useQuery,
   useRerender,
-  useSelect,
 };
